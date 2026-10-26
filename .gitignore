@@ -1,0 +1,25 @@
+# окружение и кэши
+.venv/
+.cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+wheels/
+
+# сборка
+build/
+dist/
+*.zip
+lersim/_lercore*.pyd
+lersim/_lercore*.so
+
+# результаты работы программы
+logs/
+out/
+ler_sim.ini
+*.npz
+
+# локальные настройки редактора и служебные утилиты рабочего места
+.vscode/
+tools/
+clean_c.bat

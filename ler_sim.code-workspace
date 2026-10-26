@@ -1,0 +1,233 @@
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": [],
+    "python.terminal.activateEnvironment": true,
+    "files.exclude": {
+      "**/__pycache__": true,
+      ".cache": true,
+      "build": true,
+      "dist": false
+    },
+    "C_Cpp.default.includePath": [
+      "${workspaceFolder}/.venv/Lib/site-packages/pybind11/include",
+      "${env:LOCALAPPDATA}/Programs/Python/Python314/include"
+    ],
+    "C_Cpp.default.cppStandard": "c++17",
+    "C_Cpp.default.defines": [
+      "_OPENMP"
+    ],
+    "C_Cpp.default.intelliSenseMode": "windows-msvc-x64",
+    "task.saveBeforeRun": "never"
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "LER: приложение",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/ler_gui.py",
+        "cwd": "${workspaceFolder}",
+        "justMyCode": true,
+        "env": {
+          "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
+        }
+      },
+      {
+        "name": "LER: пакетный прогон (run.py)",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/run.py",
+        "args": [
+          "--lines",
+          "500"
+        ],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+        "env": {
+          "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
+        }
+      },
+      {
+        "name": "LER: тесты (отладка)",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "pytest",
+        "args": [
+          "-v"
+        ],
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+        "justMyCode": false
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Создать окружение .venv",
+        "type": "process",
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "setup_env.bat"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Собрать ядро C++",
+        "type": "process",
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "build_core.bat"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": "$msCompile"
+      },
+      {
+        "label": "Запустить приложение",
+        "type": "shell",
+        "command": "$env:MPLCONFIGDIR='${workspaceFolder}\\.cache\\matplotlib'; .venv\\Scripts\\python ler_gui.py",
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Тесты: все",
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        },
+        "type": "process",
+        "command": ".venv\\Scripts\\python.exe",
+        "args": [
+          "-m",
+          "pytest",
+          "-v"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}",
+          "env": {
+            "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
+          }
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Тесты: белый ящик",
+        "type": "process",
+        "command": ".venv\\Scripts\\python.exe",
+        "args": [
+          "-m",
+          "pytest",
+          "-v",
+          "tests/white"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}",
+          "env": {
+            "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
+          }
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Тесты: чёрный ящик",
+        "type": "process",
+        "command": ".venv\\Scripts\\python.exe",
+        "args": [
+          "-m",
+          "pytest",
+          "-v",
+          "tests/black"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}",
+          "env": {
+            "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
+          }
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Собрать EXE",
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "type": "process",
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "build.bat"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Упаковать архив для передачи",
+        "type": "process",
+        "command": ".venv\\Scripts\\python.exe",
+        "args": [
+          "pack.py"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Скачать пакеты для закрытого контура",
+        "type": "process",
+        "command": "cmd.exe",
+        "args": [
+          "/c",
+          "call env_d.bat && .venv\\Scripts\\python -m pip download -r requirements.txt -r requirements-dev.txt -d wheels"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Освободить место на диске C",
+        "type": "process",
+        "command": "powershell.exe",
+        "args": [
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "tools\\free_c.ps1"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "problemMatcher": []
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.debugpy"
+    ]
+  }
+}
