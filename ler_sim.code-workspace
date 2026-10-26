@@ -41,21 +41,6 @@
         }
       },
       {
-        "name": "LER: пакетный прогон (run.py)",
-        "type": "debugpy",
-        "request": "launch",
-        "program": "${workspaceFolder}/run.py",
-        "args": [
-          "--lines",
-          "500"
-        ],
-        "cwd": "${workspaceFolder}",
-        "console": "integratedTerminal",
-        "env": {
-          "MPLCONFIGDIR": "${workspaceFolder}\\.cache\\matplotlib"
-        }
-      },
-      {
         "name": "LER: тесты (отладка)",
         "type": "debugpy",
         "request": "launch",
