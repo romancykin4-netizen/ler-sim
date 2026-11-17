@@ -1,6 +1,6 @@
 ## Как работает bisection_placer
 
-[Открыть интерактивную презентацию](https://romancykin4-netizen.github.io/ler-sim/)
+[![Анимация работы bisection_placer](docs/bisection-preview.gif)](https://romancykin4-netizen.github.io/ler-sim/)
 
 
 
